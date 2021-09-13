@@ -36,7 +36,7 @@ const run = async() => {
             await role.tryAdventure();
         }
 
-        await new Promise(resolve => setTimeout(resolve, 10*60));
+        await new Promise(resolve => setTimeout(resolve, 10*60*1000));
     }
 }
 
