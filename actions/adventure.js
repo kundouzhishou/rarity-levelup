@@ -26,12 +26,12 @@ const adventure = async (summonerId, currentTime) => {
             /* let receipt = */ await response.wait()
             // log("adventure", summonerId, receipt);
             log('adventure', summonerId, `Adventure successfull!`)
-            pause()
+            // pause()
         } catch (err) {
             error('adventure', summonerId, `Could not send the tx: ${err}`)
         }
     } else {
-        log('adventure', summonerId, `Not yet time to adventure.`)
+        log('adventure', summonerId, `Not yet time to adventure.left: ${adventureTimestamp - currentTime}`)
     }
 }
 

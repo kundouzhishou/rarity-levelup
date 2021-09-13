@@ -7,6 +7,7 @@ const { provider } = require('./config/wallet')
 const { checkClass } = require('./actions/classes')
 const { spendBaseAttributes } = require('./actions/spendBaseAttributes')
 const { claimGold } = require('./actions/gold')
+const Role = require("./actions/role");
 
 const main = async () => {
     let block = await provider.getBlock()
@@ -18,14 +19,24 @@ const main = async () => {
             `### Start with summoner ${summonerIds[i]} ${summonerClass} ###`
         )
         await adventure(summonerIds[i], currentTime)
-        await levelUp(summonerIds[i])
-        await craftAdventure(summonerIds[i], currentTime)
-        await spendBaseAttributes(summonerIds[i])
+        // await levelUp(summonerIds[i])
+        // await craftAdventure(summonerIds[i], currentTime)
+        // await spendBaseAttributes(summonerIds[i])
         // await claimGold(summonerIds[i])
         console.log(``)
     }
 }
 
-main().catch((err) => {
+const run = async() => {
+    for (let i = 0; i < summonerIds.length; i++) {
+        let id = summonerIds[i];
+        let role = new Role(id);
+        await role.initialize();
+        await role.tryAdventure();
+        await new Promise(resolve=>setTimeout(resolve,50));
+    }
+}
+
+run().catch((err) => {
     console.error(err)
 })
