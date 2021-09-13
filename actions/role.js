@@ -62,6 +62,12 @@ class Role {
         }
     }
 
+    async calculateGasPrice() {
+        let gasPriceData = await provider.getGasPrice();
+        let gasPrice = ethers.BigNumber.from(gasPriceData.toString()).toNumber() / (10**9);
+        return Math.floor(gasPrice);
+    }
+
     async _save_to_db() {
         // console.log("save to db ...");
         let data = {};
@@ -72,9 +78,3 @@ class Role {
 }
 
 module.exports = Role;
-/*
-async() => {
-    let now = await getBlockTime();
-    console.log(now);
-}
-*/

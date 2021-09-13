@@ -28,11 +28,15 @@ const main = async () => {
 }
 
 const run = async() => {
-    for (let i = summonerIds.length - 1; i >= 0; i--) {
-        let id = summonerIds[i];
-        let role = new Role(id);
-        await role.initialize();
-        await role.tryAdventure();
+    while(true) {
+        for (let i = summonerIds.length - 1; i >= 0; i--) {
+            let id = summonerIds[i];
+            let role = new Role(id);
+            await role.initialize();
+            await role.tryAdventure();
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 10*60));
     }
 }
 
