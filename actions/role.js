@@ -58,7 +58,7 @@ class Role {
             this.adventurers_log = 0;
             await this._save_to_db();
         }catch(e) {
-            error('adventure', this.id, `Could not send the tx: ${err}`)
+            error('adventure', this.id, `Could not send the tx: ${e}`)
         }
     }
 
