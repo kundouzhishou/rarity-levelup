@@ -6,12 +6,14 @@ const getBlockTime = require('./blocktime');
 const rarityContractAddress = contracts.rarity
 const attributesContractAddress = contracts.attributes
 const goldContractAddress = contracts.gold;
-const craft1_1ContractAddress = contracts.crafting1_1;
+const craft1_1ContractAddress = contracts.craftingAdventure1_1;
+const rarContractAddress = contracts.rar_token;
 
 const rarityAbi = require('../abis/rarity.json')
 const attributesAbi = require('../abis/rarity_attributes.json')
 const goldAbi = require('../abis/rarity_gold.json')
 const craft1_1Abi = require('../abis/rarity_crafting_1-1.json')
+const rarAbi = require('../abis/rar_token.json');
 
 
 const { provider, nonceManager } = require('../config/wallet')
@@ -25,6 +27,8 @@ const goldContract = new ethers.Contract(goldContractAddress, goldAbi, provider)
 const writeGoldContract = goldContract.connect(nonceManager);
 const craft1_1Contract = new ethers.Contract(craft1_1ContractAddress, craft1_1Abi, provider)
 const writeCraft1_1Contract = craft1_1Contract.connect(nonceManager);
+const rarContract = new ethers.Contract(rarContractAddress, rarAbi,provider);
+const writeRarContract = rarContract.connect(nonceManager);
 
 const { checkClass, baseAttributes } = require('./classes')
 
@@ -165,6 +169,34 @@ class Role {
             await this._save_to_db();
         }catch(e) {
             error('craft1_1', this.id, `Could not send the tx: ${e}`)
+        }
+    }
+
+    async tryClaimGold() {
+        try {
+            let amount = await goldContract.claimable(this.id);
+            if(amount.gt(0)) {
+                let response = await writeGoldContract.claim(this.id);
+                await response.wait();
+                log('gold',this.id, `Gold claimed ${ethers.utils.formatUnits(amount, 18)} successfully`)
+            }
+        }catch(err) {
+            error('gold', this.id, err);
+        }
+    }
+
+    async tryClaimRar() {
+        try {
+            let amount = await writeRarContract.claimable(this.id);
+            if(amount && amount.gt(0)) {
+                let response = await writeRarContract.claim(this.id);
+                await response.wait();
+                log('rar',this.id, `RAR claimed ${ethers.utils.formatUnits(amount, 18)} successfully`);
+            }else {
+                log('rar', this.id, `No RAR to claim or already claimed`);
+            }
+        }catch(err) {
+            error('rar',this.id, err);
         }
     }
 

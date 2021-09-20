@@ -13,6 +13,8 @@ const run = async() => {
             // await role.trySpendBaseAttributes();
             await role.tryLevelUp();
             await role.tryCraftAdventure();
+            await role.tryClaimGold();
+            await role.tryClaimRar();
         }
 
         await new Promise(resolve => setTimeout(resolve, 10*60*1000));
