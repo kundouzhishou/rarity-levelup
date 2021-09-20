@@ -87,7 +87,7 @@ class Role {
         currentXp = ethers.utils.formatUnits(currentXp, 18);
         if(currentXp >= xpRequired) {
             try {
-                let response = await writeContract.level_up(this.id)
+                let response = await writeRarityContract.level_up(this.id)
                 await response.wait()
                 log('levelUp', this.id, `Level up succesfull, cur_level=${currentLevel},cur_xp=${currentXp},need_xp=${xpRequired}`)  
             }catch(err) {

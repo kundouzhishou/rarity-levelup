@@ -6,43 +6,26 @@ const ethers = require('ethers')
 const { provider } = require('./config/wallet')
 const { checkClass } = require('./actions/classes')
 const { spendBaseAttributes } = require('./actions/spendBaseAttributes')
-const { claimGold } = require('./actions/gold')
-const Role = require("./actions/role");
+const claimGold = require('./actions/gold')
 
 const main = async () => {
     let block = await provider.getBlock()
     let currentTime = ethers.BigNumber.from(block.timestamp)
 
-    for (let i = summonerIds.length - 1; i >= 0; i--) {
+    for (let i = 0; i < summonerIds.length; i++) {
         let summonerClass = await checkClass(summonerIds[i])
         console.log(
             `### Start with summoner ${summonerIds[i]} ${summonerClass} ###`
         )
         await adventure(summonerIds[i], currentTime)
-        // await levelUp(summonerIds[i])
-        // await craftAdventure(summonerIds[i], currentTime)
-        // await spendBaseAttributes(summonerIds[i])
-        // await claimGold(summonerIds[i])
+        await levelUp(summonerIds[i])
+        await craftAdventure(summonerIds[i], currentTime)
+        await spendBaseAttributes(summonerIds[i])
+        await claimGold(summonerIds[i])
         console.log(``)
     }
 }
 
-const run = async() => {
-    while(true) {
-        console.log('start run ...');
-        
-        for (let i = summonerIds.length - 1; i >= 0; i--) {
-            let id = summonerIds[i];
-            let role = new Role(id);
-            await role.initialize();
-            await role.tryAdventure();
-            await role.trySpendBaseAttributes();
-            // await role.tryLevelUp();
-            await role.tryCraftAdventure();
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 10*60*1000));
-    }
-}
-
-run();
+main().catch((err) => {
+    console.error(err)
+})
