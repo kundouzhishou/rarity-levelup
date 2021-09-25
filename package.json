@@ -21,7 +21,8 @@
         "@ethersproject/experimental": "^5.4.0",
         "dotenv": "^10.0.0",
         "ethers": "^5.4.6",
-        "jsoning": "^0.11.22"
+        "jsoning": "^0.11.22",
+        "solc": "^0.8.7-fixed"
     },
     "devDependencies": {
         "eslint": "^7.32.0",
